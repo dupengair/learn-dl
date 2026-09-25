@@ -1,0 +1,13 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# 生成的数据缓存（load_mnist() 会自动重新生成，约 53MB）
+dataset/mnist.pkl
+
+# 原始 MNIST gz（约 12MB，缺失时脚本会从 S3 镜像自动下载）
+dataset/mnist/*.gz
+
+# 工具本地文件
+.codegraph/
+.claude/settings.local.json
