@@ -18,3 +18,8 @@ from .gradients import (
 from .net import (
     TwoLayerNet,
 )
+
+from .layer import (
+    MulLayer,
+    AddLayer,
+)
