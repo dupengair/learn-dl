@@ -15,6 +15,6 @@ from .gradients import (
     gradient_descent,
 )
 
-from .two_layer_net import (
+from .net import (
     TwoLayerNet,
 )
