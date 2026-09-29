@@ -6,6 +6,8 @@ from .functions import (
     sigmoid,
     relu,
     softmax,
+    Sigmoid,
+    Relu,
     function_1,
     function_2,
 )
@@ -22,4 +24,6 @@ from .net import (
 from .layer import (
     MulLayer,
     AddLayer,
+    Affine,
+    SoftmaxWithLoss,
 )
