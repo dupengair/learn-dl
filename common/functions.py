@@ -24,21 +24,6 @@ def sigmoid(x):
 def relu(x):
     return np.maximum(0, x)
 
-class Relu:
-    def __init__(self):
-        self.mask = None
-
-    def forward(self, x):
-        self.mask = (x <= 0)
-        out = x.copy()
-        out[self.mask] = 0
-        return out
-
-    def backward(self, dout):
-        dout[self.mask] = 0
-        dx = dout
-        return dx
-
 def softmax(x):
     if x.ndim == 2:
         x = x.T
@@ -48,19 +33,6 @@ def softmax(x):
 
     x = x - np.max(x) # 溢出对策
     return np.exp(x) / np.sum(np.exp(x))
-
-class Sigmoid:
-    def __init__(self):
-        self.out = None
-
-    def forward(self, x):
-        out = 1 / (1 + np.exp(-x))
-        self.out = out
-        return out
-
-    def backward(self, dout):
-        dx = dout * (1.0 - self.out) * self.out
-        return dx
 
 def function_1(x):
     return 0.01*x**2 + 0.1*x

@@ -5,9 +5,7 @@ from .functions import (
     mean_squared_error,
     sigmoid,
     relu,
-    softmax,
-    Sigmoid,
-    Relu,
+    softmax,    
     function_1,
     function_2,
 )
@@ -17,13 +15,45 @@ from .gradients import (
     gradient_descent,
 )
 
-from .net import (
-    TwoLayerNet,
-)
-
 from .layer import (
     MulLayer,
     AddLayer,
     Affine,
     SoftmaxWithLoss,
+    Sigmoid,
+    Relu,
 )
+
+from .net import (
+    TwoLayerNet,
+)
+
+__all__ = [
+    # functions.py：激活函数
+    'step_function',
+    'identity_function',
+    'sigmoid',
+    'relu',
+    'softmax',
+    # functions.py：损失函数
+    'mean_squared_error',
+    'cross_entropy_error',
+    # functions.py：梯度演示用
+    'function_1',
+    'function_2',
+
+    # gradients.py：数值微分与梯度法
+    'numerical_gradient',
+    'gradient_descent',
+
+    # layer.py：计算图演示层与网络层
+    'MulLayer',
+    'AddLayer',
+    'Affine',
+    'Relu',
+    'Sigmoid',
+    'SoftmaxWithLoss',
+
+    # net.py：网络
+    'TwoLayerNet',
+]
