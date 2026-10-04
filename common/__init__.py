@@ -26,7 +26,20 @@ from .layer import (
 
 from .net import (
     TwoLayerNet,
+    MultiLayerNet,
 )
+
+from .optimiser import (
+    SGD,
+    Momentum,
+    AdaGrad,
+    Adam,
+)
+
+from .utils import (
+    smooth_curve,
+)
+
 
 __all__ = [
     # functions.py：激活函数
@@ -56,4 +69,14 @@ __all__ = [
 
     # net.py：网络
     'TwoLayerNet',
+    'MultiLayerNet',
+
+    # optimiser.py：优化器
+    'SGD',
+    'Momentum',
+    'AdaGrad',
+    'Adam',
+
+    # utils.py：工具函数
+    'smooth_curve',
 ]
