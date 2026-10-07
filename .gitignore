@@ -11,3 +11,4 @@ dataset/mnist/*.gz
 # 工具本地文件
 .codegraph/
 .claude/settings.local.json
+.vscode/
