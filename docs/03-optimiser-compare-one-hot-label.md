@@ -202,3 +202,81 @@ def cross_entropy_error(y, t):
 ## 复盘
 
 第一轮文档的方案 B 把 functions.py 的改动拆散在两处叙述（argmax 分支写在方案 B 正文、花式索引求和行写在"根因"第 3 小节引用的原书代码里），照抄时极易漏掉后半步。本次教训：**给"替换函数"类修复建议时，应一次性给出完整函数体**，而不是让人把分散的片段自己拼起来。
+
+---
+
+# 追加分析（第三轮，2026-10-05）：新增 RMSprop 后绘图 KeyError
+
+## 现象
+
+在 `test04-1` 中解禁 `optimizers['RMSprop'] = RMSprop()`（第 27 行，书上原本的注释行），自己实现了 `RMSprop` 类，训练全部跑完，最后在绘图处崩溃：
+
+```
+File "test04-1_optimiser-compare-minist.py", line 62, in <module>
+    plt.plot(x, smooth_curve(train_loss[key]), marker=markers[key], ...)
+                                                     ~~~~~~~^^^^^
+KeyError: 'RMSprop'
+```
+
+## 排查：整条新增链路都是通的
+
+| 环节 | 位置 | 状态 |
+|---|---|---|
+| RMSprop 实现 | `common/optimiser.py:44`（EMA 形式，与原书 6.1.4 一致） | ✓ 正确 |
+| 包导出 | `common/__init__.py:37`（导入）、`:80`（`__all__`） | ✓ |
+| 脚本导入 | `test04-1:10` `from common import ..., RMSprop` | ✓ |
+| 优化器注册 | `test04-1:27` | ✓ |
+| 训练循环 | 5 个优化器 × 2000 迭代**完整跑完**，无报错 | ✓ |
+| 绘图样式 | `test04-1:59` `markers` 字典只有 4 项 | ✗ **唯一没跟上的一处** |
+
+训练能完整跑完同时说明：第二轮的 `cross_entropy_error` 修复已生效（整数标签路径已通）。
+
+## 根因：手工平行字典漏同步
+
+`markers` 是一个**按优化器名字手工枚举**的绘图样式映射：
+
+```python
+markers = {"SGD": "o", "Momentum": "x", "AdaGrad": "s", "Adam": "D"}
+```
+
+脚本里的另外三个字典——`optimizers`、`networks`、`train_loss`——都是以 `optimizers` 为单一事实源、由 `for key in optimizers.keys()` 循环自动生成的，新增优化器自动跟上；**唯独 `markers` 需要手工同步**。新增第五个优化器时其余四个字典全部自动扩容，只有它忘了加条目，`markers['RMSprop']` 就 KeyError。
+
+为什么原书脚本没有这个坑：原书 `common/optimizer.py` **根本没有 RMSprop 类**（6.1.4 节只讲了原理，没给实现），脚本里那行 `#optimizers['RMSprop'] = RMSprop()` 是书上留给读者的练习，注释状态恰好与 4 项 markers 对齐。解禁它意味着同时要做三件事：实现类、导出导入、同步 markers——前两件不做脚本跑不起来（会立刻报 ImportError/NameError），第三件不做则**训练全程跑完才在最后一行崩掉**，2000 次迭代白跑。这就是"静默滞后"类错误的典型形态：滞后点离工作点越远，浪费越大。
+
+## 修复方案
+
+### 方案 A（最小）：markers 补一项
+
+`test04-1:59` 改为：
+
+```python
+markers = {"SGD": "o", "Momentum": "x", "AdaGrad": "s", "Adam": "D", "RMSprop": "^"}
+```
+
+marker 样式任选，与已有的 o（圆）/ x（叉）/ s（方）/ D（菱）区分度好即可；常用备选：`^`（上三角）、`v`（下三角）、`P`（填充加号）、`*`（星号）、`p`（五边形）。注意小写 `x` 是线形叉、大写 `X` 才是填充叉，别混用。
+
+### 方案 B（根治）：自动分配 marker，消除手工同步点
+
+```python
+marker_list = ["o", "x", "s", "D", "^", "v", "<", ">", "P", "*"]
+x = np.arange(max_iterations)
+for i, key in enumerate(optimizers.keys()):
+    plt.plot(x, smooth_curve(train_loss[key]),
+             marker=marker_list[i % len(marker_list)],
+             markevery=100, label=key)
+```
+
+以后再加第 6、7 个优化器（如书 6 章之后的对比实验）都不会再炸；代价是与原书代码形态略有偏离。学习阶段建议至少用方案 A 改通，理解原因后可换方案 B。
+
+## 顺带点评：RMSprop 实现本身
+
+`common/optimiser.py:44-62` 的实现是对的——对比 `AdaGrad` 只差两点，正是 RMSprop 的核心思想：
+
+- AdaGrad：`h += g²`（无衰减累加）→ 分母单调增大 → 学习率迟早衰减到接近 0，训练后期走不动；
+- RMSprop：`h = 0.99·h + 0.01·g²`（指数移动平均）→ 分母反映**近期**梯度尺度 → 学习率保持自适应但不枯竭。
+
+`lr=0.01, decay_rate=0.99` 是该实现的常规起点，与本脚本中 AdaGrad 的默认 lr 相同，对比是公平的。预期曲线：应明显快于 SGD，与 AdaGrad/Adam 同档（具体相对位置受批次随机性影响，不必强求书图复现）。
+
+## 复盘
+
+三轮报错其实是一条共同模式的三次显形：**"书上脚本"与"本仓库公共库/现场改动"之间的隐式契约被打破**——第一轮是损失函数版本不配套，第二轮是修复只落地一半，第三轮是新增项漏了手工同步的平行字典。排查时先确认"链路上每一环是否都在"（本轮的表格排查法），再找"哪一环是手工维护的"（它就是最可能的滞后点）。

@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 from dataset.mnist import load_mnist
 from common import smooth_curve
 from common import MultiLayerNet
-from common import SGD, Momentum, AdaGrad, Adam
+from common import SGD, Momentum, AdaGrad, Adam, RMSprop
 
 
 # 0:读入MNIST数据==========
@@ -24,7 +24,7 @@ optimizers['SGD'] = SGD()
 optimizers['Momentum'] = Momentum()
 optimizers['AdaGrad'] = AdaGrad()
 optimizers['Adam'] = Adam()
-#optimizers['RMSprop'] = RMSprop()
+optimizers['RMSprop'] = RMSprop()
 
 networks = {}
 train_loss = {}
@@ -56,7 +56,7 @@ for i in range(max_iterations):
 
 
 # 3.绘制图形==========
-markers = {"SGD": "o", "Momentum": "x", "AdaGrad": "s", "Adam": "D"}
+markers = {"SGD": "o", "Momentum": "x", "AdaGrad": "s", "Adam": "D", "RMSprop": "^"}
 x = np.arange(max_iterations)
 for key in optimizers.keys():
     plt.plot(x, smooth_curve(train_loss[key]), marker=markers[key], markevery=100, label=key)

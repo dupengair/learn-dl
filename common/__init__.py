@@ -34,6 +34,7 @@ from .optimiser import (
     Momentum,
     AdaGrad,
     Adam,
+    RMSprop,
 )
 
 from .utils import (
@@ -76,6 +77,7 @@ __all__ = [
     'Momentum',
     'AdaGrad',
     'Adam',
+    'RMSprop',
 
     # utils.py：工具函数
     'smooth_curve',
