@@ -1,7 +1,7 @@
 import sys, os
 import numpy as np
 sys.path.append(os.pardir)
-from common import Affine, SoftmaxWithLoss, Relu, Sigmoid, BatchNormalization
+from common import Affine, SoftmaxWithLoss, Relu, Sigmoid, BatchNormalization, Dropout
 from common import numerical_gradient
 from collections import OrderedDict
 

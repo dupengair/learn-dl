@@ -23,6 +23,7 @@ from .layer import (
     Sigmoid,
     Relu,
     BatchNormalization,
+    Dropout,
 )
 
 from .net import (
@@ -37,12 +38,16 @@ from .optimiser import (
     AdaGrad,
     Adam,
     RMSprop,
+    Nesterov,
 )
 
 from .utils import (
     smooth_curve,
 )
 
+from .trainer import (
+    Trainer,
+)
 
 __all__ = [
     # functions.py：激活函数
@@ -70,6 +75,7 @@ __all__ = [
     'Sigmoid',
     'SoftmaxWithLoss',
     'BatchNormalization',
+    'Dropout',
 
     # net.py：网络
     'TwoLayerNet',
@@ -82,7 +88,11 @@ __all__ = [
     'AdaGrad',
     'Adam',
     'RMSprop',
+    'Nesterov',
 
     # utils.py：工具函数
     'smooth_curve',
+
+    # trainer.py：训练器
+    'Trainer',
 ]
