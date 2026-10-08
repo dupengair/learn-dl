@@ -22,11 +22,13 @@ from .layer import (
     SoftmaxWithLoss,
     Sigmoid,
     Relu,
+    BatchNormalization,
 )
 
 from .net import (
     TwoLayerNet,
     MultiLayerNet,
+    MultiLayerNetExtend,
 )
 
 from .optimiser import (
@@ -67,10 +69,12 @@ __all__ = [
     'Relu',
     'Sigmoid',
     'SoftmaxWithLoss',
+    'BatchNormalization',
 
     # net.py：网络
     'TwoLayerNet',
     'MultiLayerNet',
+    'MultiLayerNetExtend',
 
     # optimiser.py：优化器
     'SGD',
