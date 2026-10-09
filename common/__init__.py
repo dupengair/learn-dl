@@ -43,6 +43,7 @@ from .optimiser import (
 
 from .utils import (
     smooth_curve,
+    shuffle_dataset,
 )
 
 from .trainer import (
@@ -92,6 +93,7 @@ __all__ = [
 
     # utils.py：工具函数
     'smooth_curve',
+    'shuffle_dataset',
 
     # trainer.py：训练器
     'Trainer',
