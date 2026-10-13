@@ -24,12 +24,15 @@ from .layer import (
     Relu,
     BatchNormalization,
     Dropout,
+    Convolution,
+    Pooling,
 )
 
 from .net import (
     TwoLayerNet,
     MultiLayerNet,
     MultiLayerNetExtend,
+    SimpleConvNet,
 )
 
 from .optimiser import (
@@ -44,6 +47,8 @@ from .optimiser import (
 from .utils import (
     smooth_curve,
     shuffle_dataset,
+    im2col,
+    col2im,
 )
 
 from .trainer import (
@@ -77,11 +82,14 @@ __all__ = [
     'SoftmaxWithLoss',
     'BatchNormalization',
     'Dropout',
+    'Convolution',
+    'Pooling',
 
     # net.py：网络
     'TwoLayerNet',
     'MultiLayerNet',
     'MultiLayerNetExtend',
+    'SimpleConvNet',
 
     # optimiser.py：优化器
     'SGD',
@@ -94,7 +102,9 @@ __all__ = [
     # utils.py：工具函数
     'smooth_curve',
     'shuffle_dataset',
-
+    'im2col',
+    'col2im',
+    
     # trainer.py：训练器
     'Trainer',
 ]

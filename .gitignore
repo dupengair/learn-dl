@@ -12,3 +12,6 @@ dataset/mnist/*.gz
 .codegraph/
 .claude/settings.local.json
 .vscode/
+
+# 训练保存的模型参数（test05-3 生成）
+params.pkl
