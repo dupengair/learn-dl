@@ -13,5 +13,6 @@ dataset/mnist/*.gz
 .claude/settings.local.json
 .vscode/
 
-# 训练保存的模型参数（test05-3 生成）
+# 训练保存的模型参数（test05-3 生成 params.pkl，test06-1 生成 deep_convnet_params.pkl）
 params.pkl
+deep_convnet_params.pkl

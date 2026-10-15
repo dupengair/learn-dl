@@ -33,6 +33,7 @@ from .net import (
     MultiLayerNet,
     MultiLayerNetExtend,
     SimpleConvNet,
+    DeepConvNet,
 )
 
 from .optimiser import (
@@ -90,6 +91,7 @@ __all__ = [
     'MultiLayerNet',
     'MultiLayerNetExtend',
     'SimpleConvNet',
+    'DeepConvNet',
 
     # optimiser.py：优化器
     'SGD',
